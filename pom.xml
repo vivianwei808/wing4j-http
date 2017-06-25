@@ -22,6 +22,7 @@
     <modules>
     	<module>wing4j-http-protocol</module>
         <module>wing4j-http-client</module>
+        <module>wing4j-http-client-spring</module>
         <module>wing4j-http-server</module>
     </modules>
 </project>
