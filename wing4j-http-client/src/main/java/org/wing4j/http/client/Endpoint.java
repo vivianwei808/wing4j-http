@@ -73,7 +73,7 @@ public final class Endpoint {
         Map<String, InterfaceSecurityMetadata> interfaceDescInfoMap = new HashMap<>();
         interfaceDescInfoMap.put(interfaceDescInfo.getName() + "@" + interfaceDescInfo.getVersion(), interfaceDescInfo);
         final InterfaceService interfaceService = wrap(InterfaceService.class, ctx, interfaceDescInfoMap);
-        final FetchInterfaceRequest request = FetchInterfaceRequest.builder().service(service).build();
+        final FetchInterfaceRequest request = FetchInterfaceRequest.builder().service("interfaceService").build();
         try {
             fetch(cipherPassword, request, interfaceService, service);
         } catch (Throwable e) {
@@ -91,7 +91,7 @@ public final class Endpoint {
         }, 60 * 1000, 60 * 1000);
     }
 
-    private static void fetch(String cipherPassword, FetchInterfaceRequest request, InterfaceService interfaceService, String channelNo) throws UnsupportedEncodingException {
+    private static void fetch(String cipherPassword, FetchInterfaceRequest request, InterfaceService interfaceService, String service) throws UnsupportedEncodingException {
         String token = AesUtils.encrypt(String.valueOf(System.currentTimeMillis()), cipherPassword, "UTF-8");
         request.setToken(token);
         FetchInterfaceResponse response = interfaceService.fetchInterfaceDefine(request);
@@ -99,7 +99,7 @@ public final class Endpoint {
         for (InterfaceSecurityMetadata interfaceDescInfo : response.getInterfaces()) {
             interfaces.put(interfaceDescInfo.getName() + "@" + interfaceDescInfo.getVersion(), interfaceDescInfo);
         }
-        CHANNEL_CACHE.put(channelNo, interfaces);
+        CHANNEL_CACHE.put(service, interfaces);
     }
 
     public static <T> T lookup(Class<T> serviceClass, ServiceContext ctx) {
