@@ -2,7 +2,6 @@ package org.wing4j.http.server.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.springframework.stereotype.Service;
 import org.wing4j.common.logtrack.ErrorContext;
 import org.wing4j.common.logtrack.ErrorContextFactory;
 import org.wing4j.common.logtrack.LogtrackRuntimeException;
@@ -18,7 +17,6 @@ import java.lang.reflect.Method;
  * Created by wing4j on 2017/6/25.
  * 接口执行器
  */
-@Service
 public final class InterfaceInvoker {
     static Gson GSON = new GsonBuilder().setPrettyPrinting().setDateFormat("yyyyMMddHHmmssSSS").create();
     Method interfaceMethod;
@@ -97,7 +95,7 @@ public final class InterfaceInvoker {
         if (returnClass == Response.class) {
             return (Response)response;
         }else{
-            Response response1 = Response.builder().service(request.getService()).name(request.getName()).version(request.getVersion()).data(response).build();
+            Response response1 = Response.builder().channelNo(request.getChannelNo()).name(request.getName()).version(request.getVersion()).data(response).build();
             return response1;
         }
     }

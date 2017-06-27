@@ -2,6 +2,9 @@ package org.wing4j.http.server.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.wing4j.http.protocol.code.RspCode;
 import org.wing4j.http.protocol.domains.InterfaceSecurityMetadata;
 import org.wing4j.http.protocol.domains.Request;
@@ -9,23 +12,25 @@ import org.wing4j.http.protocol.domains.Response;
 import org.wing4j.http.server.*;
 import org.wing4j.http.protocol.service.InterfaceSecurityService;
 import org.wing4j.http.server.metadata.InterfaceDefineMetadata;
-import org.wing4j.http.server.metadata.InterfaceServiceDefineMetadata;
+import org.wing4j.http.server.metadata.InterfaceChannelDefineMetadata;
 
 /**
  * Created by wing4j on 2017/6/25.
  */
-public class SimpleInterfaceAccessEngine implements InterfaceAccessEngine{
+@Service
+public class SimpleInterfaceAccessEngine implements InterfaceAccessEngine, InitializingBean{
     static Gson GSON = new GsonBuilder().setPrettyPrinting().setDateFormat("yyyyMMddHHmmssSSS").create();
 
+    @Autowired
     InterfaceLookupService interfaceLookupService;
-
+    @Autowired
     InterfaceExecuteService interfaceExecuteService;
-
+    @Autowired
     InterfaceSecurityService interfaceSecurityService;
-
+    @Autowired
     InterfaceSecurityInfoService interfaceSecurityInfoService;
-
-    InterfaceServiceInfoService interfaceServiceInfoService;
+    @Autowired
+    InterfaceChannelInfoService interfaceServiceInfoService;
     @Override
     public String execute(String reqJson) {
         Request request = GSON.fromJson(reqJson, Request.class);
@@ -35,23 +40,24 @@ public class SimpleInterfaceAccessEngine implements InterfaceAccessEngine{
     }
 
     Response execute(Request request) {
-        Response.Builder responseBuilder = Response.builder().service(request.getService()).name(request.getName());
+        Response.Builder responseBuilder = Response.builder().channelNo(request.getChannelNo()).name(request.getName());
+        //检查通道是否存在
+        InterfaceChannelDefineMetadata interfaceServiceDefineMetadata = interfaceServiceInfoService.lookup(request.getChannelNo());
+        if(interfaceServiceDefineMetadata == null){
+            //TODO
+            responseBuilder.code(RspCode.INTERFACE_NOT_DEFINE);
+            return responseBuilder.build();
+        }
         //检查服务是否定义
-        InterfaceDefineMetadata interfaceDefineMetadata = interfaceLookupService.lookup(request.getService(), request.getName(), request.getVersion());
+        InterfaceDefineMetadata interfaceDefineMetadata = interfaceLookupService.lookup(request.getName(), request.getVersion());
         if(interfaceDefineMetadata == null){//如果服务器没有定义接口服务，则直接返回
             responseBuilder.code(RspCode.INTERFACE_NOT_DEFINE);
             return responseBuilder.build();
         }
         Response response = responseBuilder.build();
         //根据服务名和接口名获取安全元信息
-        InterfaceSecurityMetadata interfaceSecurityMetadata = interfaceSecurityInfoService.lookup(request.getService(), request.getName());
+        InterfaceSecurityMetadata interfaceSecurityMetadata = interfaceSecurityInfoService.lookup(request.getChannelNo(), request.getName());
         if(interfaceSecurityMetadata == null){
-            //TODO
-            responseBuilder.code(RspCode.INTERFACE_NOT_DEFINE);
-            return responseBuilder.build();
-        }
-        InterfaceServiceDefineMetadata interfaceServiceDefineMetadata = interfaceServiceInfoService.lookup(request.getService());
-        if(interfaceServiceDefineMetadata == null){
             //TODO
             responseBuilder.code(RspCode.INTERFACE_NOT_DEFINE);
             return responseBuilder.build();
@@ -98,5 +104,10 @@ public class SimpleInterfaceAccessEngine implements InterfaceAccessEngine{
             }
         }
         return response;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.interfaceLookupService.scan();
     }
 }

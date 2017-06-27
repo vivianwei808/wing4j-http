@@ -36,11 +36,11 @@ import java.io.Serializable;
 public class Request<T> implements Serializable {
     private static Gson GSON = new GsonBuilder().serializeNulls().setDateFormat("yyyyMMddHHmmssSSS").create();
     /**
-     * 服务名称
+     * 通道编号
      */
     @Getter
     @Setter
-    String service;
+    String channelNo;
     /**
      * 接口名称
      */
@@ -87,8 +87,8 @@ public class Request<T> implements Serializable {
 
     }
 
-    private Request(String service, String name, String version, String sign, String signType, String cipherType, String className, String data) {
-        this.service = service;
+    private Request(String channelNo, String name, String version, String sign, String signType, String cipherType, String className, String data) {
+        this.channelNo = channelNo;
         this.name = name;
         this.version = version;
         this.sign = sign;
@@ -106,7 +106,7 @@ public class Request<T> implements Serializable {
         /**
          * 服务名称
          */
-        String service;
+        String channelNo;
         /**
          * 交易码
          */
@@ -136,8 +136,8 @@ public class Request<T> implements Serializable {
          */
         String data;
 
-        public Builder service(String service) {
-            this.service = service;
+        public Builder channelNo(String channelNo) {
+            this.channelNo = channelNo;
             return this;
         }
 
@@ -187,7 +187,7 @@ public class Request<T> implements Serializable {
             if (this.className == null) {
                 throw new LogtrackRuntimeException(ErrorContextFactory.instance().activity("设置接口应答信息").message("className is null"));
             }
-            Request<T> request = new Request<>(this.service, this.txType, this.version, this.sign, this.signType, this.cipherType, this.className, this.data);
+            Request<T> request = new Request<>(this.channelNo, this.txType, this.version, this.sign, this.signType, this.cipherType, this.className, this.data);
             return request;
         }
     }

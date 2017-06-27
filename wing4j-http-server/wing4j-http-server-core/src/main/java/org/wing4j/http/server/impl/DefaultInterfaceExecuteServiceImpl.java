@@ -1,5 +1,6 @@
 package org.wing4j.http.server.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -22,7 +23,12 @@ public class DefaultInterfaceExecuteServiceImpl implements InterfaceExecuteServi
     public Response call(Request request, InterfaceDefineMetadata interfaceDefineMetadata) {
         Method method = interfaceDefineMetadata.getMethod();
         //获取实例
-        Object instance = applicationContext.getBean(interfaceDefineMetadata.getServiceName());
+        Object instance = null;
+        if(StringUtils.isBlank(interfaceDefineMetadata.getServiceName())){
+            instance = applicationContext.getBean(interfaceDefineMetadata.getServiceName());
+        }else{
+            instance = applicationContext.getBean(interfaceDefineMetadata.getServiceClass());
+        }
         InterfaceInvoker invoker = new InterfaceInvoker(method);
         //执行服务
         return invoker.invoke(instance, request);

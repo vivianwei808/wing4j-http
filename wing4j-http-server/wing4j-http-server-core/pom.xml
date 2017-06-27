@@ -36,5 +36,11 @@
             <artifactId>wing4j-http-protocol</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.wing4j.test</groupId>
+            <artifactId>wing4j-test-core</artifactId>
+            <version>1.0.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -28,8 +28,8 @@ import org.wing4j.doc.api.annotation.ApidocElement;
 @Builder
 @ToString
 public class FetchInterfaceRequest {
-    @ApidocElement("服务名称")
-    String service;
+    @ApidocElement("通道编号")
+    String channelNo;
     @ApidocElement("TOKEN")
     String token;
 }

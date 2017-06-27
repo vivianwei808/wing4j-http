@@ -14,10 +14,4 @@ import java.lang.annotation.*;
 @Component
 public @interface HttpService {
     String value() default "";
-
-    /**
-     * 用于定义该Bean所属Service服务
-     * @return
-     */
-    String service();
 }

@@ -25,8 +25,6 @@ import org.wing4j.http.protocol.domains.InterfaceSecurityMetadata;
 import org.wing4j.http.protocol.domains.Request;
 import org.wing4j.http.protocol.domains.Response;
 import org.wing4j.http.protocol.service.InterfaceSecurityService;
-import org.wing4j.security.AesUtils;
-import org.wing4j.security.SignUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -91,13 +89,13 @@ public class Invoker implements InvocationHandler {
             if (method.getParameterTypes()[0] == Request.class) {
                 request = (Request) arguments[0];
                 request.setName(method.getName());
-                request.setService(ctx.getChannelNo());
+                request.setChannelNo(ctx.getChannelNo());
                 request.setVersion(version);
             } else {
                 if (arguments[0] == null) {
                     throw new NullPointerException();
                 } else {
-                    request = Request.builder().service(ctx.getChannelNo()).version(version).txType(name).cipherType("AES").data(arguments[0]).build();
+                    request = Request.builder().channelNo(ctx.getChannelNo()).version(version).txType(name).cipherType("AES").data(arguments[0]).build();
                 }
             }
         } else if (method.getParameterTypes().length == 2) {
@@ -125,24 +123,24 @@ public class Invoker implements InvocationHandler {
             if (method.getParameterTypes()[0] == Request.class && requestBodyIdx == 0) {
                 request = (Request) arguments[0];
                 request.setName(method.getName());
-                request.setService(ctx.getChannelNo());
+                request.setChannelNo(ctx.getChannelNo());
                 request.setVersion(version);
             } else if (method.getParameterTypes()[1] == Request.class && requestBodyIdx == 1) {
                 request = (Request) arguments[1];
                 request.setName(method.getName());
-                request.setService(ctx.getChannelNo());
+                request.setChannelNo(ctx.getChannelNo());
                 request.setVersion(version);
             } else if (method.getParameterTypes()[0] != Request.class && requestBodyIdx == 0) {
                 if (arguments[0] == null) {
                     throw new NullPointerException();
                 } else {
-                    request = Request.builder().service(ctx.getChannelNo()).version(version).txType(name).data(arguments[0]).build();
+                    request = Request.builder().channelNo(ctx.getChannelNo()).version(version).txType(name).data(arguments[0]).build();
                 }
             } else if (method.getParameterTypes()[1] != Request.class && requestBodyIdx == 1) {
                 if (arguments[1] == null) {
                     throw new NullPointerException();
                 } else {
-                    request = Request.builder().service(ctx.getChannelNo()).version(version).txType(name).data(arguments[1]).build();
+                    request = Request.builder().channelNo(ctx.getChannelNo()).version(version).txType(name).data(arguments[1]).build();
                 }
             } else {
                 throw new RuntimeException("未知参数" + method.getParameterTypes());

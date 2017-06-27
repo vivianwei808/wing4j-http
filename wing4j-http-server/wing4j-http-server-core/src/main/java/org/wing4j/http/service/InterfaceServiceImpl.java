@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * Created by wing4j on 2017/6/25.
  */
-@HttpService(service = "interfaceService")
+@HttpService("interfaceService")
 public class InterfaceServiceImpl implements InterfaceService {
     InterfaceSecurityInfoService interfaceSecurityInfoService;
     @Override
     public FetchInterfaceResponse fetchInterfaceDefine(FetchInterfaceRequest request) {
-        List<InterfaceSecurityMetadata> interfaceSecurityMetadatas = interfaceSecurityInfoService.list(request.getService());
+        List<InterfaceSecurityMetadata> interfaceSecurityMetadatas = interfaceSecurityInfoService.list(request.getChannelNo());
         for (InterfaceSecurityMetadata interfaceSecurityMetadata : interfaceSecurityMetadatas){
             String signAlgorithm = interfaceSecurityMetadata.getSignAlgorithm();
             String verifyAlgorithm = interfaceSecurityMetadata.getVerifyAlgorithm();
@@ -32,7 +32,7 @@ public class InterfaceServiceImpl implements InterfaceService {
             interfaceSecurityMetadata.setSignFirstEncryptSecond(!verifyFirstDecryptSecond);
             interfaceSecurityMetadata.setVerifyFirstDecryptSecond(!signFirstEncryptSecond);
         }
-        FetchInterfaceResponse response = FetchInterfaceResponse.builder().channeNo(request.getService()).build();
+        FetchInterfaceResponse response = FetchInterfaceResponse.builder().channelNo(request.getChannelNo()).build();
         response.getInterfaces().addAll(interfaceSecurityMetadatas);
         return response;
     }

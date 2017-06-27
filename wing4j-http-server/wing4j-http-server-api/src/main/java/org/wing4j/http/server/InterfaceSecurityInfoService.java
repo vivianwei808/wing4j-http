@@ -15,11 +15,11 @@ public interface InterfaceSecurityInfoService {
     void add(InterfaceSecurityMetadata interfaceSecurityMetadata);
     /**
      * 获取接口安全元信息
-     * @param service 服务名称
+     * @param channelNo 通道编号
      * @param name 接口名称
      * @return 接口安全元信息
      */
-    InterfaceSecurityMetadata lookup(String service, String name);
+    InterfaceSecurityMetadata lookup(String channelNo, String name);
 
     /**
      * 获取服务所有接口的安全信息

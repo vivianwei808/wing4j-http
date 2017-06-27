@@ -36,11 +36,11 @@ import java.io.Serializable;
 public class Response<T> implements Serializable {
     private static Gson GSON = new GsonBuilder().serializeNulls().setDateFormat("yyyyMMddHHmmssSSS").create();
     /**
-     * 服务名称
+     * 通道编号
      */
     @Getter
     @Setter
-    String service;
+    String channelNo;
     /**
      * 接口名称
      */
@@ -97,8 +97,8 @@ public class Response<T> implements Serializable {
     private Response(){
 
     }
-    private Response(String service, String name, String version, String code, String desc, String sign, String signType, String cipherType, String className, String data) {
-        this.service = service;
+    private Response(String channelNo, String name, String version, String code, String desc, String sign, String signType, String cipherType, String className, String data) {
+        this.channelNo = channelNo;
         this.name = name;
         this.version = version;
         this.code = code;
@@ -115,11 +115,11 @@ public class Response<T> implements Serializable {
     }
     public static class Builder{
         /**
-         * 服务名称
+         * 通道编号
          */
         @Getter
         @Setter
-        String service;
+        String channelNo;
         /**
          * 接口名称
          */
@@ -160,8 +160,8 @@ public class Response<T> implements Serializable {
          * 加密数据
          */
         String data = "{}";
-        public Builder service(String service) {
-            this.service = service;
+        public Builder channelNo(String channelNo) {
+            this.channelNo = channelNo;
             return this;
         }
 
@@ -233,7 +233,7 @@ public class Response<T> implements Serializable {
             if(this.className == null){
                 throw new LogtrackRuntimeException(ErrorContextFactory.instance().activity("设置接口应答信息").message("className is null"));
             }
-            Response<T> response = new Response<>(this.service, this.name, this.version, this.code, this.desc, this.sign, this.signType, this.cipherType, this.className, this.data);
+            Response<T> response = new Response<>(this.channelNo, this.name, this.version, this.code, this.desc, this.sign, this.signType, this.cipherType, this.className, this.data);
             return response;
         }
     }

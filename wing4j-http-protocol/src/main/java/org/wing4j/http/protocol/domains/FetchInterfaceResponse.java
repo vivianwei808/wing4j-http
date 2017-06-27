@@ -32,7 +32,7 @@ import java.util.List;
 @Builder
 public class FetchInterfaceResponse {
     @ApidocElement("通道编号")
-    String channeNo;
+    String channelNo;
     @ApidocElement("接口列表")
     final List<InterfaceSecurityMetadata> interfaces = new ArrayList<>();
 }

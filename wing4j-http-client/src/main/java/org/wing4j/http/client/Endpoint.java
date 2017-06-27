@@ -53,7 +53,7 @@ public final class Endpoint {
     private Endpoint() {
     }
 
-    static void init(final String host, final int port, final String appContext, final String service, final String signPassword, final String cipherPassword) {
+    static void init(final String host, final int port, final String appContext, final String channelNo, final String signPassword, final String cipherPassword) {
         if (timer == null) {
             synchronized (Endpoint.class) {
                 if (timer == null) {
@@ -73,9 +73,9 @@ public final class Endpoint {
         Map<String, InterfaceSecurityMetadata> interfaceDescInfoMap = new HashMap<>();
         interfaceDescInfoMap.put(interfaceDescInfo.getName() + "@" + interfaceDescInfo.getVersion(), interfaceDescInfo);
         final InterfaceService interfaceService = wrap(InterfaceService.class, ctx, interfaceDescInfoMap);
-        final FetchInterfaceRequest request = FetchInterfaceRequest.builder().service("interfaceService").build();
+        final FetchInterfaceRequest request = FetchInterfaceRequest.builder().channelNo("interfaceService").build();
         try {
-            fetch(cipherPassword, request, interfaceService, service);
+            fetch(cipherPassword, request, interfaceService, channelNo);
         } catch (Throwable e) {
             throw new RuntimeException("fetch interface define information happens error!");
         }
@@ -83,7 +83,7 @@ public final class Endpoint {
             @Override
             public void run() {
                 try {
-                    fetch(cipherPassword, request, interfaceService, service);
+                    fetch(cipherPassword, request, interfaceService, channelNo);
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
@@ -91,7 +91,7 @@ public final class Endpoint {
         }, 60 * 1000, 60 * 1000);
     }
 
-    private static void fetch(String cipherPassword, FetchInterfaceRequest request, InterfaceService interfaceService, String service) throws UnsupportedEncodingException {
+    private static void fetch(String cipherPassword, FetchInterfaceRequest request, InterfaceService interfaceService, String channelNo) throws UnsupportedEncodingException {
         String token = AesUtils.encrypt(String.valueOf(System.currentTimeMillis()), cipherPassword, "UTF-8");
         request.setToken(token);
         FetchInterfaceResponse response = interfaceService.fetchInterfaceDefine(request);
@@ -99,7 +99,7 @@ public final class Endpoint {
         for (InterfaceSecurityMetadata interfaceDescInfo : response.getInterfaces()) {
             interfaces.put(interfaceDescInfo.getName() + "@" + interfaceDescInfo.getVersion(), interfaceDescInfo);
         }
-        CHANNEL_CACHE.put(service, interfaces);
+        CHANNEL_CACHE.put(channelNo, interfaces);
     }
 
     public static <T> T lookup(Class<T> serviceClass, ServiceContext ctx) {

@@ -8,10 +8,14 @@ import org.wing4j.http.server.metadata.InterfaceDefineMetadata;
 public interface InterfaceLookupService {
     /**
      * 查找接口定义元信息
-     * @param serviceName 服务名称
      * @param interfaceName 接口名称
      * @param version 版本号
      * @return
      */
-    InterfaceDefineMetadata lookup(String serviceName, String interfaceName, String version);
+    InterfaceDefineMetadata lookup(String interfaceName, String version);
+
+    /**
+     * 扫描接口定义元信息
+     */
+    void scan();
 }

@@ -8,11 +8,11 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class InterfaceServiceDefineMetadata {
+public class InterfaceChannelDefineMetadata {
     /**
-     * 服务名称
+     * 通道编号
      */
-    String service;
+    String channelNo;
     /**
      * 签字密码
      */

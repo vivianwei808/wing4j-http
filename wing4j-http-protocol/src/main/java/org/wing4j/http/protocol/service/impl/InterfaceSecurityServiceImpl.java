@@ -1,5 +1,6 @@
 package org.wing4j.http.protocol.service.impl;
 
+import org.springframework.stereotype.Component;
 import org.wing4j.http.protocol.domains.InterfaceSecurityMetadata;
 import org.wing4j.http.protocol.domains.Request;
 import org.wing4j.http.protocol.domains.Response;
